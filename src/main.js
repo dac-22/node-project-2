@@ -8,14 +8,17 @@ let connectionUri = {
   database: "cdac",
 };
 
-function main() {
+async function main() {
   let connection = createConnection(connectionUri);
   bluebird.promisifyAll(connection);
 
-  // Callback Based Methods
-  connection.connect(); // connectAsync
-  connection.query(); // queryAsync
-  connection.end(); // endAsync
+  await connection.connectAsync();
+
+  let sql = "SELECT * FROM message";
+  let results = await connection.queryAsync(sql);
+
+  connection.endAsync();
+  console.log(results);
 }
 
 main();
