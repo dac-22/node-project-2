@@ -1,4 +1,6 @@
 import express from "express";
+import { createConnection } from "mysql";
+import bluebird from "bluebird";
 const app = express();
 
 /** Learning here Creating URLs / Endpoints */
@@ -13,12 +15,25 @@ app.get("/message", (req, res) => {
 });
 
 /*  http://localhost:3000/messages  */
-app.get("/messages/", (req, res) => {
-  let list = [];
-  list.push({ id: 1, message: "Hi", messageTime: new Date() });
-  list.push({ id: 2, message: "Hello", messageTime: new Date() });
+app.get("/messages/", async (req, res) => {
+  let connectUri = {
+    host: "localhost",
+    user: "root",
+    password: "mysql",
+    database: "cdac",
+  };
+  let connection = createConnection(connectUri);
+  bluebird.promisifyAll(connection);
 
-  res.json(list);
+  await connection.connectAsync();
+
+  // let sql = `SELECT * FROM message ORDER BY id DESC`;
+  let sql = `SELECT * FROM message`;
+  let results = await connection.queryAsync(sql);
+
+  await connection.endAsync();
+
+  res.json(results);
 });
 
 app.listen(3000);
