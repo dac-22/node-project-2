@@ -11,9 +11,12 @@ function main() {
   const connection = createConnection(connectionUri);
   connection.connect();
 
-  console.log("CONNECTION SUCCESS!!!");
+  let message = "Helloo How re are u";
+  let sql = `INSERT INTO message (message, reply) VALUES ('${message}', 0)`;
+  connection.query(sql);
 
-  // close the connection
+  console.log("Record Addedd!");
+
   connection.end();
 }
 
