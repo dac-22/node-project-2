@@ -1,7 +1,10 @@
 import express from "express";
 import { createConnection } from "mysql";
 import bluebird from "bluebird";
+
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /** Learning here Creating URLs / Endpoints */
 
@@ -51,8 +54,10 @@ app.post("/message", async (req, res) => {
 
   await connection.connectAsync();
 
-  let message = "Hello Node Mysql Bluebird!!";
-  let reply = 0;
+  // let message = "Hello Node Mysql Bluebird!!";
+  // let reply = 0;
+  let message = req.body.message;
+  let reply = req.body.reply;
 
   let sql = `INSERT INTO message (message, reply) VALUES ('${message}', ${reply})`;
   await connection.queryAsync(sql);
